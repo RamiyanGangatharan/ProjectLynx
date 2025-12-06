@@ -1,3 +1,5 @@
+package projectLynx.client;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -102,7 +104,7 @@ public class Client implements Runnable {
 
         System.out.println(formatted);
 
-        // Restore user prompt using the User's nickname
+        // Restore user prompt using the projectLynx.client.User's nickname
         System.out.print("\u001B[36m" + user.getNickname() + "\u001B[0m> ");
         System.out.flush();
     }

@@ -1,3 +1,7 @@
+package projectLynx.server;
+
+import projectLynx.client.User;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalTime;
@@ -8,7 +12,7 @@ public class ConnectionHandler implements Runnable {
     private final User user;
 
     /**
-     * Constructs a new {@code ConnectionHandler} for a client socket.
+     * Constructs a new {@code projectLynx.server.ConnectionHandler} for a client socket.
      * <p>
      * Initializes a {@link User} object associated with the given client socket.
      * If the {@link User} cannot be created due to an {@link IOException}, a
@@ -20,7 +24,7 @@ public class ConnectionHandler implements Runnable {
     public ConnectionHandler(Server server, Socket clientSocket) {
         this.server = server;
         try { this.user = new User(clientSocket, "UNKNOWN"); }
-        catch (IOException e) { throw new RuntimeException("Unable to create User object", e); }
+        catch (IOException e) { throw new RuntimeException("Unable to create projectLynx.client.User object", e); }
     }
 
     @Override public void run() {
@@ -61,7 +65,7 @@ public class ConnectionHandler implements Runnable {
     }
 
     private void broadcastJoin() {
-        // Server log
+        // projectLynx.server.Server log
         System.out.println("[" + LocalTime.now() + "] " + user.getNickname() + " connected.");
 
         // Broadcast to all other users

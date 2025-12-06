@@ -1,3 +1,5 @@
+package projectLynx.server;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -31,13 +33,13 @@ public class Server implements Runnable {
         serverSocket = new ServerSocket(9999);
         pool = Executors.newCachedThreadPool();
 
-        System.out.println("=== Project LYNX Server Started ===");
+        System.out.println("=== Project LYNX projectLynx.server.Server Started ===");
         System.out.println("Listening on port 9999...\n");
     }
 
     /**
      * Continuously listens for incoming client connections.
-     * For each accepted connection, a new ConnectionHandler is created,
+     * For each accepted connection, a new projectLynx.server.ConnectionHandler is created,
      * added to the list of active connections, and executed using the thread pool.
      *
      * @throws Exception if an error occurs while accepting client connections
@@ -56,7 +58,7 @@ public class Server implements Runnable {
 
             } catch (Exception e) {
                 if (!done) {
-                    System.out.println("Server error: " + e.getMessage());
+                    System.out.println("projectLynx.server.Server error: " + e.getMessage());
                 }
             }
         }
@@ -65,7 +67,7 @@ public class Server implements Runnable {
     /**
      * Sends a message to all currently connected clients.
      * Iterates over the list of active connections and calls `sendMessage`
-     * on each ConnectionHandler in a thread-safe manner.
+     * on each projectLynx.server.ConnectionHandler in a thread-safe manner.
      *
      * @param message the message to be broadcasted to all clients
      */
@@ -82,7 +84,7 @@ public class Server implements Runnable {
      * This is typically called when a client disconnects to ensure
      * the server no longer attempts to send messages to it.
      *
-     * @param handler the ConnectionHandler representing the client to remove
+     * @param handler the projectLynx.server.ConnectionHandler representing the client to remove
      */
     public void removeConnection(ConnectionHandler handler) {
         synchronized (connections) {
@@ -109,7 +111,7 @@ public class Server implements Runnable {
         }
         catch (Exception ignored) {}
 
-        System.out.println("Server stopped.");
+        System.out.println("projectLynx.server.Server stopped.");
     }
 
     public static void main(String[] args) { new Thread(new Server()).start(); }

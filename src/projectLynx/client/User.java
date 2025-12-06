@@ -1,3 +1,5 @@
+package projectLynx.client;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,7 +14,7 @@ public class User {
     private final PrintWriter out;
 
     /**
-     * Constructs a new User object with the specified socket and default nickname.
+     * Constructs a new projectLynx.client.User object with the specified socket and default nickname.
      * <p>
      * Initializes input and output streams for communication over the given socket.
      *

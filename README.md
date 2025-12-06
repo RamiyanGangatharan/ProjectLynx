@@ -36,10 +36,10 @@ Also, I thought “Project LYNX” sounded cool and now here we are.
 - Pure willpower and caffeine
 
 ## Modules (In Human Words)
-- Server: Accepts clients, throws them in a thread, relays messages.
-- Client: Connects to server, sends and receives messages.
-- ConnectionHandler: The middle guy that handles each user.
-- InputHandler: Reads whatever you type and fires it at the server.
+- projectLynx.server.Server: Accepts clients, throws them in a thread, relays messages.
+- projectLynx.client.Client: Connects to server, sends and receives messages.
+- projectLynx.server.ConnectionHandler: The middle guy that handles each user.
+- projectLynx.client.InputHandler: Reads whatever you type and fires it at the server.
 
 ## How Data Flows
 - You type --> client sends --> server gets --> server broadcasts --> everyone sees your message (including you).
