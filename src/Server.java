@@ -21,6 +21,12 @@ public class Server implements Runnable {
         finally { shutdown(); }
     }
 
+    /**
+     * Initializes the server by creating a ServerSocket on port 9999
+     * and setting up a cached thread pool for handling client connections.
+     *
+     * @throws Exception if the server socket cannot be created or the thread pool fails to initialize
+     */
     private void initializeServer() throws Exception {
         serverSocket = new ServerSocket(9999);
         pool = Executors.newCachedThreadPool();
@@ -29,6 +35,13 @@ public class Server implements Runnable {
         System.out.println("Listening on port 9999...\n");
     }
 
+    /**
+     * Continuously listens for incoming client connections.
+     * For each accepted connection, a new ConnectionHandler is created,
+     * added to the list of active connections, and executed using the thread pool.
+     *
+     * @throws Exception if an error occurs while accepting client connections
+     */
     private void listenLoop() throws Exception {
         while (!done) {
             try {
@@ -49,6 +62,13 @@ public class Server implements Runnable {
         }
     }
 
+    /**
+     * Sends a message to all currently connected clients.
+     * Iterates over the list of active connections and calls `sendMessage`
+     * on each ConnectionHandler in a thread-safe manner.
+     *
+     * @param message the message to be broadcasted to all clients
+     */
     public void broadcast(String message) {
         synchronized (connections) {
             for (ConnectionHandler ch : connections) {
@@ -57,12 +77,26 @@ public class Server implements Runnable {
         }
     }
 
+    /**
+     * Removes a connection from the list of active connections.
+     * This is typically called when a client disconnects to ensure
+     * the server no longer attempts to send messages to it.
+     *
+     * @param handler the ConnectionHandler representing the client to remove
+     */
     public void removeConnection(ConnectionHandler handler) {
         synchronized (connections) {
             connections.remove(handler);
         }
     }
 
+    /**
+     * Shuts down the server gracefully.
+     * <p>
+     * This method stops accepting new connections, shuts down the thread pool,
+     * closes the server socket, and terminates all active client connections.
+     * </p>
+     */
     public void shutdown() {
         done = true;
 

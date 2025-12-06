@@ -10,8 +10,15 @@ public class InputHandler implements Runnable {
         this.client = client;
     }
 
-    @Override
-    public void run() {
+    /**
+     * Main loop that reads input from the console.
+     * <p>
+     * - Displays a prompt with the current nickname.
+     * - Updates the nickname locally if a /nick or /setname command is entered.
+     * - Sends all input to the server.
+     * - Handles /quit command to terminate the client session.
+     */
+    @Override public void run() {
         try (BufferedReader console = new BufferedReader(new InputStreamReader(System.in))) {
 
             while (!client.isDone()) {

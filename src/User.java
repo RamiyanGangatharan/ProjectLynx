@@ -11,6 +11,15 @@ public class User {
     private final BufferedReader in;
     private final PrintWriter out;
 
+    /**
+     * Constructs a new User object with the specified socket and default nickname.
+     * <p>
+     * Initializes input and output streams for communication over the given socket.
+     *
+     * @param socket      the socket connected to the client
+     * @param defaultNick the default nickname to assign to the user
+     * @throws IOException if an I/O error occurs when creating input or output streams
+     */
     public User(Socket socket, String defaultNick) throws IOException {
         this.socket = socket;
         this.nickname = defaultNick;
@@ -25,12 +34,15 @@ public class User {
     public PrintWriter getOut() { return out; }
     public Socket getSocket() { return socket; }
 
-    // Set nickname
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
-    // Send a message to the user
+    /**
+     * Sends a message to this user over the associated socket.
+     *
+     * @param msg the message to send
+     */
     public void send(String msg) {
         out.println(msg);
         out.flush();
