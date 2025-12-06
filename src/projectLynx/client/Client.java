@@ -1,5 +1,8 @@
 package projectLynx.client;
 
+import projectLynx.client.gui.LoginScreen;
+
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -13,6 +16,9 @@ public class Client implements Runnable {
     private volatile boolean done = false;
 
     private User user;
+
+    public Client(LoginScreen loginScreen) {
+    }
 
     @Override public void run() {
         try {
@@ -147,6 +153,10 @@ public class Client implements Runnable {
 
 
     public static void main(String[] args) {
-        new Client().run();
+        SwingUtilities.invokeLater(() -> {
+            LoginScreen loginScreen = new LoginScreen();
+            Client client = new Client(loginScreen);
+            new Thread(client).start();
+        });
     }
 }
