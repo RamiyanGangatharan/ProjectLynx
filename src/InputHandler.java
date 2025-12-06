@@ -5,35 +5,55 @@ import java.io.InputStreamReader;
 public class InputHandler implements Runnable {
 
     private final Client client;
-    public InputHandler(Client client) { this.client = client; }
 
-    /**
-     *
-     */
+    public InputHandler(Client client) {
+        this.client = client;
+    }
+
     @Override
     public void run() {
-        try {
-            BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+        try (BufferedReader console = new BufferedReader(new InputStreamReader(System.in))) {
 
-            while (!client.done) {
-                System.out.print("LYNX:// ");
-                System.out.flush();
+            while (!client.isDone()) {
+                printPrompt();
 
                 String message = console.readLine();
-                if (message == null) break;
-
-                if (message.equals("/quit")) {
-                    client.out.println(message);
+                if (message == null) {
                     client.shutdown();
                     break;
                 }
 
-                client.out.println(message);
+                if (message.equals("/quit")) {
+                    client.send(message);
+                    client.shutdown();
+                    break;
+                }
+
+                // Handle nickname change locally before sending
+                if (message.startsWith("/nick ")) {
+                    String[] parts = message.split(" ", 2);
+                    if (parts.length == 2 && !parts[1].trim().isEmpty()) {
+                        client.getUser().setNickname(parts[1].trim());
+                    }
+                } else if (message.startsWith("/setname ")) {
+                    String[] parts = message.split(" ", 2);
+                    if (parts.length == 2 && !parts[1].trim().isEmpty()) {
+                        client.getUser().setNickname(parts[1].trim());
+                    }
+                }
+
+                // Send everything to the server
+                client.send(message);
             }
-        }
-        catch (IOException e) {
+
+        } catch (IOException e) {
             System.out.println("Input error: " + e.getMessage());
         }
     }
 
+    private void printPrompt() {
+        System.out.print("\r\u001B[2K"); // clear line
+        System.out.print("\u001B[36m" + client.getUser().getNickname() + "\u001B[0m> "); // prompt with current nickname
+        System.out.flush();
+    }
 }
