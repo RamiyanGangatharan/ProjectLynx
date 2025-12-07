@@ -3,6 +3,7 @@ package projectLynx.client.network;
 import projectLynx.client.controller.ClientController;
 import projectLynx.client.model.ClientModel;
 import projectLynx.client.view.ConsoleView;
+import projectLynx.client.view.LoginScreen;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -52,5 +53,9 @@ public class ClientApp implements Runnable {
             System.out.println("Make sure your server is running before running clients");
         }
     }
-    public static void main(String[] args) { new Thread(new ClientApp("127.0.0.1", 9999)).start(); }
+
+    public static void main(String[] args) {
+        new Thread(new ClientApp("127.0.0.1", 9999)).start();
+        LoginScreen loginScreen = new LoginScreen();
+    }
 }
