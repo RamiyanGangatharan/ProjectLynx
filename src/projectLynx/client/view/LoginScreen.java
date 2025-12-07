@@ -7,16 +7,21 @@ public class LoginScreen {
 
     // Colors & Dimensions
     private static final Color DARK_BACKGROUND = new Color(55, 55, 55);
+
     private static final Color FIELD_BACKGROUND = new Color(40, 40, 40);
     private static final Color FIELD_FOREGROUND = Color.WHITE;
+
     private static final Color BUTTON_BACKGROUND = new Color(70, 130, 180);
     private static final Color BUTTON_FOREGROUND = Color.WHITE;
+
     private static final Dimension FIELD_SIZE = new Dimension(300, 30);
     private static final Dimension BUTTON_SIZE = new Dimension(300, 35);
+    private static final Dimension WINDOW_RESOLUTION = new Dimension(500, 500);
 
+    // This is what runs the page
     public LoginScreen() {
         JFrame loginFrame = new JFrame("Project Lynx - Login");
-        loginFrame.setSize(500, 500);
+        loginFrame.setSize(WINDOW_RESOLUTION);
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setResizable(false);
         loginFrame.setLocationRelativeTo(null);
@@ -84,6 +89,14 @@ public class LoginScreen {
 
     // -------------------- Reusable Component Builders --------------------
 
+    /**
+     * Creates a centered JLabel with a specified text, font size, and color.
+     *
+     * @param text     The text to display on the label.
+     * @param fontSize The font size of the label text.
+     * @param color    The color of the label text.
+     * @return A JLabel configured with the specified text, font size, color, and centered alignment.
+     */
     private JLabel createLabel(String text, int fontSize, Color color) {
         JLabel label = new JLabel(text, SwingConstants.CENTER);
         label.setFont(new Font("Helvetica", Font.BOLD, fontSize));
@@ -97,6 +110,15 @@ public class LoginScreen {
         return getjTextField(field);
     }
 
+    /**
+     * Configures a given JTextField with consistent styling for the login screen.
+     *
+     * This includes font, foreground and background colors, caret color, border,
+     * maximum size, and center alignment.
+     *
+     * @param field The JTextField to style.
+     * @return The same JTextField instance with the applied styling.
+     */
     private JTextField getjTextField(JTextField field) {
         field.setFont(new Font("Helvetica", Font.PLAIN, 20));
         field.setForeground(FIELD_FOREGROUND);
