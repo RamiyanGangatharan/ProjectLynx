@@ -26,26 +26,29 @@ public class ClientConnection implements Runnable {
         this.user = new ChatUser(socket, "UNKNOWN");
     }
 
-    @Override public void run() {
+    @Override
+    public void run() {
         try {
-            // Prompt user for initial nickname (mirror earlier behavior)
-            user.send("=== Welcome to Project LYNX ===");
-            user.send("Enter a nickname:");
-            String nameInput = user.getIn().readLine();
-            if (nameInput == null || nameInput.trim().isEmpty()) { user.setNickname("Guest" + user.getSocket().getPort()); }
-            else { user.setNickname(nameInput.trim()); }
+            // FIRST message sent by client = username from LoginScreen
+            String username = user.getIn().readLine();
 
-            // Log & register
+            if (username == null || username.trim().isEmpty()) {
+                username = "Guest" + user.getSocket().getPort();
+            }
+
+            user.setNickname(username.trim());
             user.logConnected();
             controller.userConnected(user);
 
+            // Main message loop
             String line;
-            while ((line = user.getIn().readLine()) != null) { controller.handleMessage(user, line.trim()); }
-        }
-        catch (IOException ignored) {}
+            while ((line = user.getIn().readLine()) != null) {
+                controller.handleMessage(user, line.trim());
+            }
+
+        } catch (IOException ignored) { }
         finally {
-            try { controller.userDisconnected(user); }
-            catch (Exception ignored) {}
+            try { controller.userDisconnected(user); } catch (Exception ignored) {}
             user.logDisconnected();
             user.close();
         }

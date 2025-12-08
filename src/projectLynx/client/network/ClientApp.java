@@ -4,6 +4,8 @@ import projectLynx.client.controller.ClientController;
 import projectLynx.client.model.ClientModel;
 import projectLynx.client.view.ConsoleView;
 import projectLynx.client.view.LoginScreen;
+import projectLynx.server.controller.CSVHandler;
+import projectLynx.server.network.ServerMain;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -21,7 +23,15 @@ public class ClientApp implements Runnable {
         this.port = port;
     }
 
-    @Override public void run() {
+    public static void main(String[] args) {
+        new Thread(new ClientApp("127.0.0.1", 9999)).start();
+        new LoginScreen();
+        CSVHandler handler = new CSVHandler();
+        System.out.println(handler.readCSV());
+    }
+
+    @Override
+    public void run() {
         try {
             Socket socket = new Socket(host, port);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -46,16 +56,12 @@ public class ClientApp implements Runnable {
 
             // read server messages
             String msg;
-            while ((msg = in.readLine()) != null) { controller.handleServerMessage(msg); }
-        }
-        catch (Exception e) {
+            while ((msg = in.readLine()) != null) {
+                controller.handleServerMessage(msg);
+            }
+        } catch (Exception e) {
             System.out.println("Client error: " + e.getMessage());
             System.out.println("Make sure your server is running before running clients");
         }
-    }
-
-    public static void main(String[] args) {
-        new Thread(new ClientApp("127.0.0.1", 9999)).start();
-        LoginScreen loginScreen = new LoginScreen();
     }
 }

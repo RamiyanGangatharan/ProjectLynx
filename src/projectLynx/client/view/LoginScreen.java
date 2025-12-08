@@ -2,12 +2,14 @@ package projectLynx.client.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+
+import projectLynx.server.controller.AuthenticationController;
 
 public class LoginScreen {
 
     // Colors & Dimensions
     private static final Color DARK_BACKGROUND = new Color(55, 55, 55);
-
     private static final Color FIELD_BACKGROUND = new Color(40, 40, 40);
     private static final Color FIELD_FOREGROUND = Color.WHITE;
 
@@ -18,108 +20,98 @@ public class LoginScreen {
     private static final Dimension BUTTON_SIZE = new Dimension(300, 35);
     private static final Dimension WINDOW_RESOLUTION = new Dimension(500, 500);
 
-    // This is what runs the page
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+
     public LoginScreen() {
-        JFrame loginFrame = new JFrame("Project Lynx - Login");
-        loginFrame.setSize(WINDOW_RESOLUTION);
-        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        loginFrame.setResizable(false);
-        loginFrame.setLocationRelativeTo(null);
 
-        // Sound
-        SoundPlayer player = new SoundPlayer();
-        player.loadAndPlay("src/projectLynx/client/view/AppleSounds/Startup/StartupMacQuadra.wav");
-        player.setVolume(0.8f);
+        JFrame frame = new JFrame("Project Lynx - Login");
+        frame.setSize(WINDOW_RESOLUTION);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
 
+        SoundPlayer soundPlayer = new SoundPlayer();
+        soundPlayer.loadAndPlay("D:\\Development\\ProjectLynx\\src\\projectLynx\\client\\view\\Sounds\\StartupMacQuadra.wav");
+        soundPlayer.setVolume(0.8f);
+
+        // MAIN PANEL
         JPanel mainPanel = new JPanel();
         mainPanel.setBackground(DARK_BACKGROUND);
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
 
-        mainPanel.add(buildTitlePanel());
+        // ---------- TITLE ----------
+        JLabel title = new JLabel("PROJECT LYNX", SwingConstants.CENTER);
+        title.setFont(new Font("Helvetica", Font.BOLD, 36));
+        title.setForeground(Color.WHITE);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel subtitle = new JLabel("Developed and Designed by: Ramiyan Gangatharan", SwingConstants.CENTER);
+        subtitle.setFont(new Font("Helvetica", Font.PLAIN, 12));
+        subtitle.setForeground(Color.LIGHT_GRAY);
+        subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        mainPanel.add(title);
+        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(subtitle);
+        mainPanel.add(Box.createVerticalStrut(40));
+
+        // ---------- USERNAME ----------
+        JLabel userLabel = new JLabel("Username", SwingConstants.CENTER);
+        userLabel.setFont(new Font("Helvetica", Font.BOLD, 16));
+        userLabel.setForeground(Color.WHITE);
+        userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        usernameField = new JTextField();
+        styleTextField(usernameField);
+
+        mainPanel.add(userLabel);
+        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(usernameField);
+        mainPanel.add(Box.createVerticalStrut(20));
+
+        // ---------- PASSWORD ----------
+        JLabel passLabel = new JLabel("Password", SwingConstants.CENTER);
+        passLabel.setFont(new Font("Helvetica", Font.BOLD, 16));
+        passLabel.setForeground(Color.WHITE);
+        passLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        passwordField = new JPasswordField();
+        styleTextField(passwordField);
+
+        mainPanel.add(passLabel);
+        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(passwordField);
         mainPanel.add(Box.createVerticalStrut(30));
-        mainPanel.add(buildInputPanel());
-        mainPanel.add(Box.createVerticalStrut(30));
-        mainPanel.add(buildButtonPanel());
 
-        loginFrame.setContentPane(mainPanel);
-        loginFrame.setVisible(true);
+        // ---------- BUTTONS ----------
+        JButton loginButton = new JButton("Login");
+        styleButton(loginButton);
+
+        loginButton.addActionListener(e -> {
+            try {
+                handleLogin();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        JButton registerButton = new JButton("Register");
+        styleButton(registerButton);
+
+        registerButton.addActionListener(e -> handleRegister());
+
+        mainPanel.add(loginButton);
+        mainPanel.add(Box.createVerticalStrut(15));
+        mainPanel.add(registerButton);
+
+        // Set and show
+        frame.setContentPane(mainPanel);
+        frame.setVisible(true);
     }
 
-    private JPanel buildTitlePanel() {
-        JPanel panel = new JPanel();
-        panel.setBackground(DARK_BACKGROUND);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        panel.add(createLabel("PROJECT LYNX", 36, Color.WHITE));
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(createLabel("Developed and Designed by: Ramiyan Gangatharan", 12, Color.LIGHT_GRAY));
-
-        return panel;
-    }
-
-    private JPanel buildInputPanel() {
-        JPanel panel = new JPanel();
-        panel.setBackground(DARK_BACKGROUND);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        panel.add(createLabel("Username", 16, Color.WHITE));
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(createTextField());
-
-        panel.add(Box.createVerticalStrut(20));
-        panel.add(createLabel("Password", 16, Color.WHITE));
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(createPasswordField());
-
-        return panel;
-    }
-
-    private JPanel buildButtonPanel() {
-        JPanel panel = new JPanel();
-        panel.setBackground(DARK_BACKGROUND);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        panel.add(createButton("Login"));
-        panel.add(Box.createVerticalStrut(15));
-        panel.add(createButton("Register"));
-
-        return panel;
-    }
-
-    // -------------------- Reusable Component Builders --------------------
-
-    /**
-     * Creates a centered JLabel with a specified text, font size, and color.
-     *
-     * @param text     The text to display on the label.
-     * @param fontSize The font size of the label text.
-     * @param color    The color of the label text.
-     * @return A JLabel configured with the specified text, font size, color, and centered alignment.
-     */
-    private JLabel createLabel(String text, int fontSize, Color color) {
-        JLabel label = new JLabel(text, SwingConstants.CENTER);
-        label.setFont(new Font("Helvetica", Font.BOLD, fontSize));
-        label.setForeground(color);
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        return label;
-    }
-
-    private JTextField createTextField() {
-        JTextField field = new JTextField();
-        return getjTextField(field);
-    }
-
-    /**
-     * Configures a given JTextField with consistent styling for the login screen.
-     *
-     * This includes font, foreground and background colors, caret color, border,
-     * maximum size, and center alignment.
-     *
-     * @param field The JTextField to style.
-     * @return The same JTextField instance with the applied styling.
-     */
-    private JTextField getjTextField(JTextField field) {
+    private void styleTextField(JTextField field) {
         field.setFont(new Font("Helvetica", Font.PLAIN, 20));
         field.setForeground(FIELD_FOREGROUND);
         field.setBackground(FIELD_BACKGROUND);
@@ -127,22 +119,22 @@ public class LoginScreen {
         field.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         field.setMaximumSize(FIELD_SIZE);
         field.setAlignmentX(Component.CENTER_ALIGNMENT);
-        return field;
     }
 
-    private JPasswordField createPasswordField() {
-        JPasswordField field = new JPasswordField();
-        return (JPasswordField) getjTextField(field);
-    }
-
-    private JButton createButton(String text) {
-        JButton button = new JButton(text);
+    private void styleButton(JButton button) {
         button.setFont(new Font("Helvetica", Font.BOLD, 20));
         button.setForeground(BUTTON_FOREGROUND);
         button.setBackground(BUTTON_BACKGROUND);
         button.setFocusPainted(false);
         button.setMaximumSize(BUTTON_SIZE);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        return button;
+    }
+
+    private void handleLogin() throws IOException {
+        AuthenticationController.login(usernameField.getText(), new String(passwordField.getPassword()));
+    }
+
+    private void handleRegister() {
+        AuthenticationController.register(usernameField.getText(), new String(passwordField.getPassword()));
     }
 }

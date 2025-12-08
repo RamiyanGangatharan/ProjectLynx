@@ -13,10 +13,10 @@ import java.net.Socket;
  * and providing access to communication channels.
  */
 public class ClientModel {
-    private String nickname;
     private final Socket socket;
     private final BufferedReader in;
     private final PrintWriter out;
+    private String nickname;
 
 
     /**
@@ -34,10 +34,23 @@ public class ClientModel {
         this.nickname = nickname;
     }
 
-    public String getNickname() { return nickname; }
-    public void setNickname(String nickname) { this.nickname = nickname; }
+    public String getNickname() {
+        return nickname;
+    }
 
-    public BufferedReader getIn() { return in; }
-    public PrintWriter getOut() { return out; }
-    public Socket getSocket() { return socket; }
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public BufferedReader getIn() {
+        return in;
+    }
+
+    public PrintWriter getOut() {
+        return out;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
 }

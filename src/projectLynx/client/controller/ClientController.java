@@ -35,7 +35,9 @@ public class ClientController {
      *
      * @param msg the message received from the server
      */
-    public void handleServerMessage(String msg) { view.printIncoming(msg, model.getNickname()); }
+    public void handleServerMessage(String msg) {
+        view.printIncoming(msg, model.getNickname());
+    }
 
     /**
      * Sends a message from the client to the server.
@@ -44,7 +46,11 @@ public class ClientController {
      *
      * @param message the message to send to the server
      */
-    public void sendMessage(String message) { if (model.getOut() != null) { model.getOut().println(message); }}
+    public void sendMessage(String message) {
+        if (model.getOut() != null) {
+            model.getOut().println(message);
+        }
+    }
 
     /**
      * Updates the client's nickname locally.
@@ -54,5 +60,7 @@ public class ClientController {
      *
      * @param newNick the new nickname to set for this client
      */
-    public void setNickname(String newNick) { model.setNickname(newNick); }
+    public void setNickname(String newNick) {
+        model.setNickname(newNick);
+    }
 }
